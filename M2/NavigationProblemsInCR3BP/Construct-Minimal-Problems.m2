@@ -1,32 +1,4 @@
 ---------------------------------------------------------------------------------------------
--- Method that solves for C given x, y:
--- For each model given the C polynomial coeff matrix and C interval,
--- form the polynomial in C obtained by substituting (x,y) into the orbit equation
--- and find its roots. Select only the real roots that lie in the C interval.
----------------------------------------------------------------------------------------------
-solveForCWithAllModels = method()
-solveForCWithAllModels (Matrix,List,List,Ring) := (observedPoint,scaledCIntervals,CPolynomialCoeffMatrixList,R) -> (
-    (x,y) := toSequence flatten entries observedPoint;
-    c := first flatten entries vars R;
-    sol := {};
-    scan(#scaledCIntervals, i -> (
-	    CInterval := scaledCIntervals_i;
-	    CPolynomialCoeffMatrix := CPolynomialCoeffMatrixList_i;
-	    powerBasis := matrix{{1},{c},{c^2},{c^3}};
-	    orbitCoefficients := CPolynomialCoeffMatrix*powerBasis;
-	    F := first flatten entries(matrix{{x,x^2,x^3,x^4,y^2,x*y^2,x^2*y^2,y^4}}*orbitCoefficients) - 1;
-	    sols := roots F;
-	    --<< "--" << sols << endl;
-	    -- select only real solutions in the current C interval
-	    realSolsInInterval := select(sols, sol -> (abs imaginaryPart sol < 1e-5) and (isMember(realPart sol,CInterval)));
-	    sol = sol | apply(realSolsInInterval, sol -> realPart sol);
-	    << "-- Found " << #realSolsInInterval << " solutions in C interval " << CInterval << endl;
-	    scan(#realSolsInInterval, j -> << "---- Solution " << j+1 << ": C = " << realSolsInInterval_j << endl);
-	    )
-	);
-    )
-
----------------------------------------------------------------------------------------------
 -- Method that constructs the minimal problems:
 -- Lyapunov: unknowns: x,y
 -- Halo: unknowns: u,v,w
@@ -73,21 +45,22 @@ constructMinimalProblems (List,List,Ring,List) := o -> (orbitConstraintsTuples,d
 		) else {}
 	    )
 	);
-    
-    distanceConstraints := apply(distanceConstraintsTuples, distanceConstraintsTuple -> (
-	    if not o#DerivativesOfDistances then (
-		(pointA,pointB,distAB) := toSequence distanceConstraintsTuple;
-		) else if o#DerivativesOfDistances then (
-		(velocityA,velocityB,distDerivativeAB) := (0,0,0);
-	    	(pointA,pointB,velocityA,velocityB,distAB,distDerivativeAB) = toSequence distanceConstraintsTuple;
-		);
-	    out := (sum apply(flatten entries (pointA - pointB), x -> x^2)) - distAB^2;
-	    if o#DerivativesOfDistances then (
-		out = {out} | {first flatten entries ((transpose (pointA - pointB))*(velocityA - velocityB)) - distAB*distDerivativeAB};
-		);
-	    out
-	    )
-	);
+    if #(flatten distanceConstraintsTuples) != 0 then (
+	distanceConstraints := apply(distanceConstraintsTuples, distanceConstraintsTuple -> (
+		if not o#DerivativesOfDistances then (
+		    (pointA,pointB,distAB) := toSequence distanceConstraintsTuple_{0..2};
+		    ) else if o#DerivativesOfDistances then (
+		    (velocityA,velocityB,distDerivativeAB) := (0,0,0);
+		    (pointA,pointB,velocityA,velocityB,distAB,distDerivativeAB) = toSequence distanceConstraintsTuple;
+		    );
+		out := (sum apply(flatten entries (pointA - pointB), x -> x^2)) - distAB^2;
+		if o#DerivativesOfDistances then (
+		    out = {out} | {first flatten entries ((transpose (pointA - pointB))*(velocityA - velocityB)) - distAB*distDerivativeAB};
+		    );
+		out
+		)
+	    );
+	) else distanceConstraints = {};
     (flatten orbitConstraints) | (flatten energyConstraints) | (flatten distanceConstraints)
     )
 
@@ -131,7 +104,8 @@ findEffectivePotentialConstraints (Matrix,Matrix,List) := o -> (stateMatrix,sqrt
 ---------------------------------------------------------------------------------------------
 findDegree = method(Options => {OrbitScenario => "Lyapunov"})
 findDegree (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
-    I := ideal constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList,OrbitScenario => o#OrbitScenario);
+    constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList,OrbitScenario => o#OrbitScenario);
+    I := ideal constraints;
     << "--Dimension of I: " << dim I << endl;
     assert ((dim I) == 0);
     degree I

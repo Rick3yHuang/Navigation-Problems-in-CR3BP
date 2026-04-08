@@ -40,7 +40,6 @@ export {
     "baseModelPolynomial",
     -- Minimal Problems
     "loadEnergyIntervalsAndModels",
-    "solveForCWithAllModels",
     "findDegree",
     -- Optional inputs
     "UseSpecificBasis",
