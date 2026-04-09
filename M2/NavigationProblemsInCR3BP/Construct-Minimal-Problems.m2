@@ -7,32 +7,29 @@
 --        R is the polynomial ring where the contraints are constructed
 -- Returns: List of polynomials defining the minimal problem in R
 ---------------------------------------------------------------------------------------------
-constructMinimalProblems = method(Options => {OrbitScenario => "Lyapunov", DerivativesOfDistances => false})
+constructMinimalProblems = method(Options => {DerivativesOfDistances => false})
 constructMinimalProblems (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintsTuples,R,maxDegreeList) -> (
     (jacobiConstantDegree,modelDegree) := toSequence maxDegreeList;
     orbitConstraints := apply(orbitConstraintsTuples, orbitConstraintsTuple -> (
-	    if o#OrbitScenario == "Lyapunov" and not o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,energy) := toSequence orbitConstraintsTuple;
-	    if o#OrbitScenario == "Lyapunov" and o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,energy) = toSequence orbitConstraintsTuple_{0,2,3};
-	    if o#OrbitScenario == "Halo" then (
-		heightCPolynomialCoeffMatrixList := null;
-		if not o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,heightCPolynomialCoeffMatrixList,energy) = toSequence orbitConstraintsTuple;
-		if o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,heightCPolynomialCoeffMatrixList,energy) = toSequence orbitConstraintsTuple_{0,2,3,4};
-		);
+	    if not o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,energy) := toSequence orbitConstraintsTuple_{0..2};
+	    if o#DerivativesOfDistances then (point,CPolynomialCoeffMatrix,energy) = toSequence orbitConstraintsTuple_{0,2,3};
 	    powerBasis := transpose matrix{apply(jacobiConstantDegree+1, i -> energy^i)};
 	    orbitCoefficients := CPolynomialCoeffMatrix*powerBasis;
 	    x := local x;
 	    y := local y;
 	    S := R[x,y];
 	    modelBasis := returnModelBasis({x,y},modelDegree);
-	    if o#OrbitScenario == "Lyapunov" then out := (first flatten entries(sub(matrix{modelBasis},transpose point)*sub(orbitCoefficients,R))) - 1;
-	    if o#OrbitScenario == "Halo" then (
-		heightOrbitCoefficients := heightCPolynomialCoeffMatrixList*powerBasis;
+	    if #orbitConstraintsTuple == 3 then (
+		out := (first flatten entries(sub(matrix{modelBasis},transpose point^{0..1})*sub(orbitCoefficients,R))) - 1;
+		) else if #orbitConstraintsTuple == 4 then (
+		heightCPolynomialCoeffMatrix := orbitConstraintsTuple_3;
+		heightOrbitCoefficients := heightCPolynomialCoeffMatrix*powerBasis;
 		z := local z;
 		S = R[x,y,z];
-		modelBasis = returnModelBasis({x,y},modelDegree);
-		p1 := (first flatten entries(sub(matrix{modelBasis},transpose point)*sub(orbitCoefficients,R))) - 1;
-		p2 := (first flatten entries((matrix{{1}}|sub(matrix{modelBasis},transpose point))*sub(heightOrbitCoefficients,R))) - point_(2,0);
-		out = {p1,p2};
+		out = {};
+		out = append(out, (first flatten entries(sub(matrix{modelBasis},transpose point^{0..1})*sub(orbitCoefficients,R))) - 1);
+		out = append(out,first flatten entries((matrix{{1}}|sub(sub(matrix{modelBasis},S),transpose point))*sub(heightOrbitCoefficients,R))-point_(2,0));
+		out
 		);
 	    out
 	    )
@@ -53,7 +50,12 @@ constructMinimalProblems (List,List,Ring,List) := o -> (orbitConstraintsTuples,d
 		    (velocityA,velocityB,distDerivativeAB) := (0,0,0);
 		    (pointA,pointB,velocityA,velocityB,distAB,distDerivativeAB) = toSequence distanceConstraintsTuple;
 		    );
-		out := (sum apply(flatten entries (pointA - pointB), x -> x^2)) - distAB^2;
+		if #distanceConstraintsTuple == 3 then (
+		    out := (sum apply(flatten entries (pointA - pointB), x -> x^2)) - distAB^2;
+		    ) else if #distanceConstraintsTuple == 5 then (
+		    (cosTheta,sinTheta) := toSequence distanceConstraintsTuple_{3..4};
+		    out = {cosTheta^2 + sinTheta^2 - 1};
+		    );
 		if o#DerivativesOfDistances then (
 		    out = {out} | {first flatten entries ((transpose (pointA - pointB))*(velocityA - velocityB)) - distAB*distDerivativeAB};
 		    );
@@ -102,9 +104,9 @@ findEffectivePotentialConstraints (Matrix,Matrix,List) := o -> (stateMatrix,sqrt
 --        R = QQ[c1,c2,s1,s2,t1,t2]
 -- Returns: List of polynomials defining the minimal problem
 ---------------------------------------------------------------------------------------------
-findDegree = method(Options => {OrbitScenario => "Lyapunov"})
-findDegree (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
-    constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList,OrbitScenario => o#OrbitScenario);
+findDegree = method()
+findDegree (List,List,Ring,List) := (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
+    constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList);
     I := ideal constraints;
     << "--Dimension of I: " << dim I << endl;
     assert ((dim I) == 0);

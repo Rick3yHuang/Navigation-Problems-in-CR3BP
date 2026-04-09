@@ -62,6 +62,7 @@ export {
     "findEarthMoonDistance",
     "returnAllModelBasis",
     "findModelExponentMatrix",
+    "returnModelBasis",
     ----------------------------
     -- Directory Shortcuts -----
     ----------------------------

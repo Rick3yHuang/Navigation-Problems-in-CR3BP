@@ -167,7 +167,6 @@ doc ///
   Key
    findDegree
    (findDegree,List,List,Ring,List)
-   [findDegree,OrbitScenario]
   Headline
     Find the degree of the minimal problem in navigation based on measurements and C polynomial coefficient matrices
   Usage
@@ -181,8 +180,6 @@ doc ///
       the polynomial ring in which the minimal problem is constructed
     maxDegreeList: List
 	   a list of integers specifying the maximum degrees for the jacobi constant C and modeling polynomials      
-    OrbitScenario => String
-      an optional method used to construct the minimal problem; defaults to constructMinimalProblems if not provided
   Outputs
     degree: ZZ
       an integer representing the degree of the minimal problem in navigation

@@ -1,13 +1,21 @@
 -----------------------------------------------------------------------------
 --------------- Describe Spacecraft Positions  ------------------------------
 -----------------------------------------------------------------------------
-A = matrix{{uA},{vA},{wA}};
-B = matrix{{uB},{vB},{wB}};
+powerBasisList = apply({c}, x -> transpose matrix{apply(jacobiConstantDegree+1, i -> x^i)})
+heightOrbitCoefficientsList = apply(#heightCPolynomialCoeffMatrixList, i -> (heightCPolynomialCoeffMatrixList_i)*(powerBasisList_i))
+uvList = {{uA,vA},{uB,vB}};
+wList = apply(#uvList, i -> (
+	(u,v) = toSequence uvList_i;
+	modelBasis = returnModelBasis({u,v},modelDegree);
+	first flatten entries((matrix{{1}}|matrix{modelBasis})*heightOrbitCoefficientsList_0)
+	))
+A = matrix{{uA},{vA},{wList_0}};
+B = matrix{{uB},{vB},{wList_1}};
 M = transpose M
 -----------------------------------------------------------------------------
 --------------------- Build Minimal Problem  --------------------------------
 -----------------------------------------------------------------------------
-orbitContraintTuples = apply(2,i -> {{A,B}_i, CPolynomialCoeffMatrixList_0, heightCPolynomialCoeffMatrixList_0, c});
+orbitContraintTuples = apply(2,i -> {{A,B}_i, CPolynomialCoeffMatrixList_0, c});
 netList orbitContraintTuples
 distanceConstraintTuples = {{A,B,distAB},{A,M,distAM},{B,M,distBM}};
 netList distanceConstraintTuples
@@ -15,44 +23,6 @@ end
 
 -----------------------------------------------------------------------------
 ---------- start M2 in "../../FittingAlgebraicOrbitEquation.m2" -------------
------------------------------------------------------------------------------
-
------------------------------------------------------------------------------
----------------- Experiment with fabricated data  ---------------------------
------------------------------------------------------------------------------
-restart
-needsPackage "NavigationProblemsInCR3BP"
-orbitType = "Halo";					  -- Type of orbit to fit
-IDIntervals = {{400,600}};				  -- ID Intervals for saved coeffs
-orbitID = 450;						  -- Orbit IDs for two spacecraft
-pointIndexA = 50;					  -- Index of observed point for the spacecraft A
-pointIndexB = 135;					  -- Index of observed point for the spacecraft B
-pointIndexList = {pointIndexA,pointIndexB};    		  -- List of point indices for the two spacecraft
-jacobiConstantDegree = 3;				  -- degree of Jacobi constant polynomial model
-modelDegree = 4;					  -- degree of orbit polynomial model
-fabricateFromPointsOnModels = true;			  -- Whether to fabricate observed points from the fitted models
-
-R = CC[c,uA,vA,wA,uB,vB,wB];
--- Data fabrication
-needs (minimalProblemDirectory | orbitType | "-Orbits/" | orbitType | "-One-Mothership-Two-Spacecraft-IOD-Fabrication.m2")
-
--- Build minimal problem
-needs (minimalProblemDirectory | orbitType | "-Orbits/"  | orbitType | "-One-Mothership-Two-Spacecraft-IOD.m2")
-system = constructMinimalProblems(orbitContraintTuples,distanceConstraintTuples,R,{jacobiConstantDegree,modelDegree},OrbitScenario => orbitType);
-netList system
-sub(matrix{system}, matrix(CC,{trueSols}))
-
--- Solve minimal problem
-needsPackage "NumericalAlgebraicGeometry"
-sols = solveSystem system;						-- All complex solutions
-#sols									-- Number of complex solutions
-realSols = realPoints sols    						-- Real solutions
-#realSols;								-- Number of real solutions
-s = select(sols, sol -> (norm_2(coordinates sol - trueSols) < 1e-2))	-- Solutions close to true solution
-coordinates first s - trueSols	      					-- Error in the found solution
-
------------------------------------------------------------------------------
----------------------- Symbolic Computation  --------------------------------
 -----------------------------------------------------------------------------
 restart
 setRandomSeed 0
@@ -63,7 +33,7 @@ modelDegree = 4;		       -- Degree of the orbit model polynomials
 fabricateFromPointsOnModels = true;    -- Whether to fabricate observed points from the fitted models
 
 X = ZZ/7772777
-Y = X[c,uA,vA,wA,uB,vB,wB]
+Y = X[c,uA,vA,uB,vB]
 
 -- Random measurements
 (M,distAM,distBM,distAB) = (random(X^1, X^3),random(X),random(X),random(X));
@@ -72,4 +42,4 @@ heightCPolynomialCoeffMatrixList = apply(1, i -> random(X^(sub((modelDegree^2/4+
 
 -- Build minimal problem
 needs (minimalProblemDirectory | orbitType | "-Orbits/" | orbitType | "-One-Mothership-Two-Spacecraft-IOD.m2")
-findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree},OrbitScenario => orbitType)
+elapsedTime findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree})
