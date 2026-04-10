@@ -29,7 +29,7 @@ setRandomSeed 0
 needsPackage "NavigationProblemsInCR3BP"
 orbitType = "Halo";		       -- Type of orbit to fit
 jacobiConstantDegree = 3;	       -- Degree of the Jacobi constant polynomial
-modelDegree = 4;		       -- Degree of the orbit model polynomials
+modelDegree = 6;		       -- Degree of the orbit model polynomials
 fabricateFromPointsOnModels = true;    -- Whether to fabricate observed points from the fitted models
 
 X = ZZ/7772777

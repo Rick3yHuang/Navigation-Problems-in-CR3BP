@@ -10,7 +10,7 @@ wList = apply(#uvList, i -> (
 	first flatten entries((matrix{{1}}|matrix{modelBasis})*heightOrbitCoefficientsList_0)
 	))
 A = matrix{{uA},{uA},{wList_0}};
-B = A - distAB*matrix{{sinTheta*cosPhi},{sinTheta*sinPhi},{cosTheta}};
+B = A - distAB*matrix{{uDir},{vDir},{wDir}};
 -----------------------------------------------------------------------------
 --------------------- Build Minimal Problem  --------------------------------
 -----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ B = A - distAB*matrix{{sinTheta*cosPhi},{sinTheta*sinPhi},{cosTheta}};
 (heightCPolynomialCoeffMatrixA,heightCPolynomialCoeffMatrixB) = toSequence heightCPolynomialCoeffMatrixList;
 orbitContraintTuples = {{A,CPolynomialCoeffMatrixA,cA},{B,CPolynomialCoeffMatrixB,cB,heightCPolynomialCoeffMatrixB}};
 netList orbitContraintTuples
-distanceConstraintTuples = {{A,B,distAB,cosTheta,sinTheta},{A,B,distAB,cosPhi,sinPhi}};
+distanceConstraintTuples = {{}};
 netList distanceConstraintTuples
 end
 
@@ -33,12 +33,10 @@ jacobiConstantDegree = 3;	       -- Degree in Jacobi constant of the model polyn
 modelDegree = 6;		       -- Degree of the model polynomials
 
 X = ZZ/7772777			       -- Finite field for symbolic computation
-Y = X[cA,uA,vA,sinTheta,sinPhi]	       -- Polynomial ring over finite field
+Y = X[cA,uA,vA]	       -- Polynomial ring over finite field
 
 -- Random measurements
-(distAB,cB) = toSequence flatten entries random(X^1,X^2);
-cosTheta = random(X); -- theta is the angle from positive w axis
-cosPhi = random(X); -- phi is the angle in uv plane
+(distAB,cB,uDir,vDir,wDir) = toSequence flatten entries random(X^1,X^5);
 CPolynomialCoeffMatrixList = apply(2, i -> random(X^(sub((modelDegree^2/4)+modelDegree,ZZ)), X^(jacobiConstantDegree+1)));		 -- Random model coeffs
 heightCPolynomialCoeffMatrixList = apply(2, i -> random(X^(sub((modelDegree^2/4+1)+modelDegree,ZZ)), X^(jacobiConstantDegree+1)));
 
