@@ -42,4 +42,4 @@ heightCPolynomialCoeffMatrixList = apply(1, i -> random(X^(sub((modelDegree^2/4+
 
 -- Build minimal problem
 needs (minimalProblemDirectory | orbitType | "-Orbits/" | orbitType | "-One-Mothership-Two-Spacecraft-IOD.m2")
-elapsedTime findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree})
+elapsedTime findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree},OrbitScenario => orbitType)

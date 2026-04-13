@@ -7,7 +7,7 @@
 --        R is the polynomial ring where the contraints are constructed
 -- Returns: List of polynomials defining the minimal problem in R
 ---------------------------------------------------------------------------------------------
-constructMinimalProblems = method(Options => {DerivativesOfDistances => false})
+constructMinimalProblems = method(Options => {DerivativesOfDistances => false, OrbitScenario => "Lyapunov"})
 constructMinimalProblems (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintsTuples,R,maxDegreeList) -> (
     (jacobiConstantDegree,modelDegree) := toSequence maxDegreeList;
     orbitConstraints := apply(orbitConstraintsTuples, orbitConstraintsTuple -> (
@@ -104,9 +104,9 @@ findEffectivePotentialConstraints (Matrix,Matrix,List) := o -> (stateMatrix,sqrt
 --        R = QQ[c1,c2,s1,s2,t1,t2]
 -- Returns: List of polynomials defining the minimal problem
 ---------------------------------------------------------------------------------------------
-findDegree = method()
-findDegree (List,List,Ring,List) := (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
-    constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList);
+findDegree = method(Options => {DerivativesOfDistances => false, OrbitScenario => "Lyapunov"})
+findDegree (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
+    constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList,DerivativesOfDistances => o#DerivativesOfDistances,OrbitScenario => o#OrbitScenario);
     I := ideal constraints;
     << "--Dimension of I: " << dim I << endl;
     assert ((dim I) == 0);

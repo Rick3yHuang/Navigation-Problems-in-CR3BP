@@ -32,7 +32,7 @@ setRandomSeed 0
 needsPackage "NavigationProblemsInCR3BP"
 orbitType = "Halo";		       -- Type of orbit to fit
 jacobiConstantDegree = 3;	       -- Degree in Jacobi constant of the model polynomials
-modelDegree = 4;		       -- Degree of the model polynomials
+modelDegree = 6;		       -- Degree of the model polynomials
 
 X = ZZ/7772777			       -- Finite field for symbolic computation
 -- Polynomial ring over finite field
@@ -45,4 +45,4 @@ heightCPolynomialCoeffMatrixList = apply(6, i -> random(X^(sub((modelDegree^2/4+
 
 -- Build minimal problem
 needs (minimalProblemDirectory | orbitType | "-Orbits/" | orbitType | "-Six-Spacecraft-IOD.m2")
-findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree})
+elapsedTime findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree},OrbitScenario => orbitType)

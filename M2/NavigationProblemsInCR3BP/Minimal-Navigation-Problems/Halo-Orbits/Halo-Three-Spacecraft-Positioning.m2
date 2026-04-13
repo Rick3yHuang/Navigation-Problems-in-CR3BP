@@ -33,7 +33,7 @@ setRandomSeed 0
 needsPackage "NavigationProblemsInCR3BP"
 orbitType = "Halo";					  -- Type of orbit to fit
 jacobiConstantDegree = 3;	       -- Degree in Jacobi constant of the model polynomials
-modelDegree = 4;		       -- Degree of the model polynomials
+modelDegree = 6;		       -- Degree of the model polynomials
 
 X = ZZ/7772777
 Y = X[uA,vA,uB,vB,uC,vC]
@@ -45,37 +45,4 @@ heightCPolynomialCoeffMatrixList = apply(3, i -> random(X^(sub((modelDegree^2/4+
 
 -- Build minimal problem
 needs (minimalProblemDirectory | orbitType | "-Orbits/" | orbitType | "-Three-Spacecraft-Positioning.m2")
-findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--*-------------------------------------------------------------------------------------
------------------ Verify the model polynomials directly--------------------------------
----------------------------------------------------------------------------------------
-allCoeffMatrixA = readAllCoefficients (savedModelsDirectory | "Jacobi-Constant-Degree-" | jacobiConstantDegree | "-Model-Degree-" | modelDegree | "/" | orbitType | "-All-Coefficients.txt");
-S = CC[xA,yA,c];
-fA = modelPolynomial(S,CPolynomialCoeffMatrixList_0,jacobiConstantDegree,modelDegree)
-sub(fA, sub(observedPointA|matrix{{scaledCList#(orbitIDA-1)}},CC))
-
-T = CC[xA,yA];
-gA = baseModelPolynomial(T,allCoeffMatrixA,orbitIDA,modelDegree)
-sub(gA, sub(observedPointA,CC))
-*-------------------------------------------------------------------------------------
+elapsedTime findDegree(orbitContraintTuples,distanceConstraintTuples,Y,{jacobiConstantDegree,modelDegree},OrbitScenario => orbitType)
