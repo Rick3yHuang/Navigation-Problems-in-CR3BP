@@ -9,7 +9,7 @@ wList = apply(#uvList, i -> (
 	modelBasis = returnModelBasis({u,v},modelDegree);
 	first flatten entries((matrix{{1}}|matrix{modelBasis})*heightOrbitCoefficientsList_0)
 	))
-A = matrix{{uA},{uA},{wList_0}};
+A = matrix{{uA},{vA},{wList_0}};
 B = A - distAB*matrix{{uDir},{vDir},{wDir}};
 -----------------------------------------------------------------------------
 --------------------- Build Minimal Problem  --------------------------------

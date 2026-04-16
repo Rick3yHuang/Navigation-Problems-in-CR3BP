@@ -107,6 +107,7 @@ findEffectivePotentialConstraints (Matrix,Matrix,List) := o -> (stateMatrix,sqrt
 findDegree = method(Options => {DerivativesOfDistances => false, OrbitScenario => "Lyapunov"})
 findDegree (List,List,Ring,List) := o -> (orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList) -> (
     constraints := constructMinimalProblems(orbitConstraintsTuples,distanceConstraintTuples,R,maxDegreeList,DerivativesOfDistances => o#DerivativesOfDistances,OrbitScenario => o#OrbitScenario);
+	<< netList constraints << endl;
     I := ideal constraints;
     << "--Dimension of I: " << dim I << endl;
     assert ((dim I) == 0);

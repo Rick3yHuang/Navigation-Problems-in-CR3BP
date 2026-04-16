@@ -25,7 +25,8 @@ path = {
     dir | "M2S-LOS-twice-Lyapunov/",
     dir | "3S-allC-Halo/",
     dir | "2M1S-Halo/",
-    dir | "M3S-allranges-Lyapunov/"} | path
+    dir | "3S-allrange-Lyapunov/",
+    dir | "M2S-same-Halo/"} | path
 
 -- Load shared helpers once (subsequent `needs` calls in problem
 -- files resolve to the same absolute path and are no-ops)
@@ -40,27 +41,29 @@ problemFiles = {
     ("2M1S-Lyapunov/sextic.m2",           6),
     ("2S-knownC-LOS-Lyapunov/quartic.m2", 16),
     ("2S-knownC-LOS-Lyapunov/sextic.m2",  36),
-    ("2S-oneC-LOS-Halo/quartic.m2",       48),
-    ("2S-oneC-LOS-Halo/sextic.m2",        108),
+    ("2S-oneC-LOS-Halo/quartic.m2",       96),
+    ("2S-oneC-LOS-Halo/sextic.m2",        216),
     ("2M1S-Halo/quartic.m2",              48),
     ("2M1S-Halo/sextic.m2",               72),
-    -- moderate (minutes)
     ("M2S-same-Lyapunov/quartic.m2",      84),
     ("M2S-same-Lyapunov/sextic.m2",       132),
     ("3S-knownCA-LOS-Lyapunov/quartic.m2",84),
     ("3S-knownCA-LOS-Lyapunov/sextic.m2", 198),
-    -- slow (many minutes)
-    ("M3S-allranges-Lyapunov/quartic.m2", 256),
-    ("M3S-allranges-Lyapunov/sextic.m2",  864),
+    ("3S-allrange-Lyapunov/quartic.m2",   256),
+    ("3S-allrange-Lyapunov/sextic.m2",    864),
+    -- moderate (minutes)
     ("M2S-LOS-twice-Lyapunov/quartic.m2", 1152),
+    -- slow (many minutes)
     ("M2S-LOS-twice-Lyapunov/sextic.m2",  2592),
-    ("3S-allC-Halo/quartic.m2",           3024)}
+    ("3S-allC-Halo/quartic.m2",           3024),
+    ("M2S-same-Halo/quartic.m2",	  4416),
+    ("3S-allrange-Halo/quartic.m2",       8192)}
 
 for f'expected in problemFiles do (
     (f, expected) := f'expected;
     print("--- " | f | "  (expected degree " | toString expected | ") ---");
     time load(dir | f);
-    print "  OK"
+    print "  OK";
     )
 
 print "=== All assertions passed ==="

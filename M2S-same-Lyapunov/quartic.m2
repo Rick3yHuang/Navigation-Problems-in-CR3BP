@@ -7,7 +7,7 @@
 --            ||pA-pB||^2=dAB^2
 -- Expected degree: 84
 needs "../degree-computation.m2"
-
+xB = symbol xB; yB = symbol yB;
 R = kk[C, xA, yA, xB, yB]
 xM = rc(); yM = rc()
 dAMsq = rc(); dBMsq = rc(); dABsq = rc()

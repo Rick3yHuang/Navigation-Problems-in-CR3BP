@@ -14,3 +14,4 @@ eqs = {
     (x - xM1)^2 + (y - yM1)^2 - d1sq,
     (x - xM2)^2 + (y - yM2)^2 - d2sq}
 assert(degree ideal eqs == 6)
+

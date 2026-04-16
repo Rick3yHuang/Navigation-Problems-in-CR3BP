@@ -16,3 +16,4 @@ eqs = {
     buildGfixed(lyapSMons(xA, yA)),
     buildGfixed(lyapSMons(xB, yB))}
 assert(degree ideal eqs == 36)
+
