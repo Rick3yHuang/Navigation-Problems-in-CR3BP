@@ -5,7 +5,7 @@
 -- Equations: g(uA,vA,C)=1,  g(uB,vB,C)=1,
 --            ||pA-M||^2=dAM^2,  ||pB-M||^2=dBM^2,
 --            ||pA-pB||^2=dAB^2
--- Expected degree: 4416 (WARNING: slow)
+-- Expected degree: 2976 (WARNING: slow)
 needs "../degree-computation.m2"
 uB = symbol uB; vB = symbol vB;
 R = kk[C, uA, vA, uB, vB]
@@ -18,9 +18,9 @@ hS = (uu, vv) -> buildHcoeffs(haloHQMons(uu, vv), cH)
 hA = hS(uA, vA); hB = hS(uB, vB)
 eqs = {
     gS(uA, vA), gS(uB, vB),
-    (uA - uM)^2 + (uA - uM)^2 + (hA - hM)^2 - dAMsq,
-    (uB - vM)^2 + (uB - vM)^2 + (hB - hM)^2 - dBMsq,
-    (uA - vB)^2 + (uA - vB)^2 + (hA - hB)^2 - dABsq}
+    (uA - uM)^2 + (vA - vM)^2 + (hA - hM)^2 - dAMsq,
+    (uB - uM)^2 + (vB - vM)^2 + (hB - hM)^2 - dBMsq,
+    (uA - uB)^2 + (vA - vB)^2 + (hA - hB)^2 - dABsq}
 I = ideal eqs
 assert(dim I == 0)
 assert(degree I == expected)
