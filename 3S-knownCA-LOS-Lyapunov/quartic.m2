@@ -21,4 +21,6 @@ gA = buildGfixed(lyapQMons(xA, yA))
 c = makeCubics(#lyapQMons(xA, yA), CBD)
 gBD = (xx, yy) -> buildGcoeffs(lyapQMons(xx, yy), c)
 eqs = {gA, gBD(xB, yB), gBD(xD, yD)}
-assert(degree ideal eqs == 84)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

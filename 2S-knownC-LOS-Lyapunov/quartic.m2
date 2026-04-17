@@ -15,4 +15,6 @@ yB = yA - dAB * sinT
 eqs = {
     buildGfixed(lyapQMons(xA, yA)),
     buildGfixed(lyapQMons(xB, yB))}
-assert(degree ideal eqs == 16)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

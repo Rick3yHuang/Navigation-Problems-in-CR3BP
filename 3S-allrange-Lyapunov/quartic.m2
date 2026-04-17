@@ -18,4 +18,6 @@ eqs = {
     (xA-xB)^2 + (yA-yB)^2 - dABsq,
     (xB-xC)^2 + (yB-yC)^2 - dBCsq,
     (xA-xC)^2 + (yA-yC)^2 - dACsq}
-assert(degree ideal eqs == 256)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

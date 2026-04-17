@@ -18,4 +18,6 @@ eqs = {
     (xA - xM)^2 + (yA - yM)^2 - dAMsq,
     (xB - xM)^2 + (yB - yM)^2 - dBMsq,
     (xA - xB)^2 + (yA - yB)^2 - dABsq}
-assert(degree ideal eqs == 132)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)
