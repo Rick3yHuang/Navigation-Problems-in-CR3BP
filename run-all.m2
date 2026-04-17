@@ -55,7 +55,7 @@ problemFiles = {
     ("M2S-LOS-twice-Lyapunov/quartic.m2", 1152),
     -- slow (many minutes)
     ("M2S-LOS-twice-Lyapunov/sextic.m2",  2592),
-    ("M2S-same-Halo/quartic.m2",	  2976)}
+    ("M2S-same-Halo/quartic.m2",	  2976),
     ("3S-allC-Halo/quartic.m2",           3024),
     ("3S-allrange-Halo/quartic.m2",       8192)}
 
