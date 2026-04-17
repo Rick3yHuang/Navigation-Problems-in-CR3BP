@@ -19,4 +19,6 @@ eqs = {
     g1,
     (u-uM1)^2 + (v-vM1)^2 + (hw-wM1)^2 - d1sq,
     (u-uM2)^2 + (v-vM2)^2 + (hw-wM2)^2 - d2sq}
-assert(degree ideal eqs == 72)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

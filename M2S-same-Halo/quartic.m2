@@ -21,4 +21,6 @@ eqs = {
     (uA - uM)^2 + (vA - vM)^2 + (hA - hM)^2 - dAMsq,
     (uB - uM)^2 + (vB - vM)^2 + (hB - hM)^2 - dBMsq,
     (uA - uB)^2 + (vA - vB)^2 + (hA - hB)^2 - dABsq}
-assert(degree ideal eqs == 2976)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

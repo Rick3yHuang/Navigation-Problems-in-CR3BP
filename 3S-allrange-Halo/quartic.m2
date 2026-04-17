@@ -21,4 +21,6 @@ eqs = {
     (uA-vB)^2 + (uA-vB)^2 + (hA-hB)^2 - dABsq,
     (uB-vC)^2 + (uB-vC)^2 + (hB-hC)^2 - dBCsq,
     (uA-vC)^2 + (uA-vC)^2 + (hA-hC)^2 - dACsq}
-assert(degree ideal eqs == 8192)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

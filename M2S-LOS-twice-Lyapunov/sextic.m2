@@ -29,4 +29,6 @@ eqs = {
     gB(xB1, yB1), gB(xB2, yB2),
     (xA1-xB1)^2 + (yA1-yB1)^2 - dAB1sq,
     (xA2-xB2)^2 + (yA2-yB2)^2 - dAB2sq}
-assert(degree ideal eqs == 2592)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

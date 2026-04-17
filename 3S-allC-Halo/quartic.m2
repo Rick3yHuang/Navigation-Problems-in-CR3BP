@@ -34,4 +34,6 @@ cHD = makeCubics(#haloHQMons(uD, vD), CD)
 gD = buildGcoeffs(haloGQMons(uD, vD), cGD)
 hD = buildHcoeffs(haloHQMons(uD, vD), cHD)
 eqs = {gA, gB, hB - hA - dwB, gD, hD - hA - dwD}
-assert(degree ideal eqs == 3024)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)

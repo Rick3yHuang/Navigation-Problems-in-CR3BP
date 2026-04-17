@@ -59,10 +59,10 @@ problemFiles = {
     ("3S-allC-Halo/quartic.m2",           3024),
     ("3S-allrange-Halo/quartic.m2",       8192)}
 
-for f'expected in problemFiles do (
-    (f, expected) := f'expected;
-    print("--- " | f | "  (expected degree " | toString expected | ") ---");
-    time load(dir | f);
+for problem'expected in problemFiles do (
+    (problem, expected) = problem'expected;
+    print("--- " | problem | "  (expected degree " | toString expected | ") ---");
+    time load(dir | problem);
     print "  OK";
     )
 

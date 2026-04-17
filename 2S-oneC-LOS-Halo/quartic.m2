@@ -22,4 +22,6 @@ cHB = makeCubics(#haloHQMons(uB, vB), CB)
 gB = buildGcoeffs(haloGQMons(uB, vB), cGB)
 hB = buildHcoeffs(haloHQMons(uB, vB), cHB)
 eqs = {gA, gB, hB - hA - dw}
-assert(degree ideal eqs == 96)
+I = ideal eqs
+assert(dim I == 0)
+assert(degree I == expected)
