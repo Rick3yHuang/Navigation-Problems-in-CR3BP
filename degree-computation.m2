@@ -17,7 +17,13 @@
 -- (matching the paper's two-stage fitting model).
 -- ================================================================
 
+-- the prime for the finite field could be changed to a larger prime if
+-- needed to show the correctness of the degree computations.  The current
+-- prime is small enough to make the computations fast, but large enough
+-- to avoid collisions in the random coefficients. (We tried 7772777, and
+-- the degree computations were still correct.)
 kk = ZZ/32003
+--kk = ZZ/7772777
 
 -- Random element of kk
 rc = () -> random kk
